@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>plan</title>
+<style>
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #000022;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    width: 60%;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #c10000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.skill-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #32324e;
+    color: antiquewhite;
+}
+
+.skill-card:hover {
+    background-color: #f0f0f0;
+}
+
+.card {
+    color: #c10000;
+}
+
+.buttons {
+    background-color: #c10000;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    height: 40px; /* Adjusted height */
+    width: 100px; /* Adjusted width */
+    border-radius: 5px;
+    display: inline-block;
+    line-height: 40px; /* Vertically center text */
+}
+
+.alter {
+    margin-top: 20px; /* Add margin to push the button down */
+}
+
+.center-button {
+    display: flex;
+    justify-content: center;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1 class="card">Plan</h1>
+    <input type="text" id="skillInput" placeholder="Your plan">
+    <button onclick="addSkill()">Done</button>
+    <div id="skillCards"></div>
+    <div class="alter center-button">
+        <a href="index.html" class="buttons">Back</a>
+    </div>
+</div>
+
+<script>
+// Load skills from localStorage if available
+let skills = JSON.parse(localStorage.getItem('skills')) || [];
+
+// Function to display skill cards
+function displaySkills() {
+    const skillCards = document.getElementById('skillCards');
+    skillCards.innerHTML = '';
+    skills.forEach((skill, index) => {
+        const card = document.createElement('div');
+        card.classList.add('skill-card');
+        card.innerHTML = `
+            <span>${skill}</span>
+            <button onclick="deleteSkill(${index})">Delete</button>
+        `;
+        skillCards.appendChild(card);
+    });
+}
+
+// Function to add a new skill
+function addSkill() {
+    const skillInput = document.getElementById('skillInput');
+    const skill = skillInput.value.trim();
+    if (skill !== '') {
+        skills.push(skill);
+        localStorage.setItem('skills', JSON.stringify(skills));
+        displaySkills();
+        skillInput.value = '';
+    }
+}
+
+// Function to delete a skill
+function deleteSkill(index) {
+    skills.splice(index, 1);
+    localStorage.setItem('skills', JSON.stringify(skills));
+    displaySkills();
+}
+
+// Display existing skills on page load
+window.onload = displaySkills;
+</script>
+</body>
+</html>

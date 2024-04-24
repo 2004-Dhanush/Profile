@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000022;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 55px;
+            height: 380px;
+            width: 490px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            float: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            
+            width: 95%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .notification {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .con1 {
+            padding-left: 170px;
+            margin-top: 20px;
+            text-decoration: none;
+            padding-top: 20px;
+
+        }
+
+        .con {
+            padding-left: 150px;
+            margin-top: 10px;
+            text-decoration: none;
+            padding-top: 05px;
+
+        }
+
+
+        .my {
+            display: flex;
+        }
+        .lo{
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="my">
+        <div class="login-container">
+           
+                <h2 class="lo">House</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                        <span id="password-notification" class="notification"></span>
+                    </div>
+                    <button type="submit">Login</button>
+                    <div class="con1"><a href="index.html" onclick="window.history.back();">Back</a></div>
+                    <div class="con"><a href="https://www.instagram.com/dhanush_7_official/">Contact me</a></div>
+                </form>
+           
+        </div>
+        <div class="hh"><img src="Cra.png"></div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            if (password === 'bank') {
+                alert('Login successful!');
+                // Redirect to another page upon successful login
+                window.location.href = 'amount.html'; // Corrected the URL
+            } else {
+                document.getElementById('password-notification').textContent = 'Password is incorrect. Please try again.';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Management</title>
+    <style>
+        /* Basic CSS for styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: antiquewhite;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+
+        }
+
+        .certificate-image {
+            width: 100px;
+            height: auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+        }
+
+        .close {
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #999;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .head {
+            background-color: #000022;
+            color: #c10000;
+            padding-left: 450px;
+            padding-bottom: 10px;
+            padding-top: 20px;
+        }
+
+        .full {
+            background-color: #000022;
+        }
+
+        .buttons {
+            color: antiquewhite;
+            background-color:#c10000;
+            border-radius: 10px;
+            width:200px;
+            height:40px;
+            font-size: 100%;
+            border: none;
+            
+
+        }
+
+        .title {
+            background-color: #191938;
+            color:antiquewhite;
+            
+        }
+
+        .split {
+            padding: 20px;
+        }
+
+        .button {
+            background-color: #c10000;
+            color: antiquewhite;
+            margin-left: 500px;
+            border-radius: 5px;
+            width:100px;
+            height:30px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        /* Increase input box size */
+   
+        input[type="text"],
+        input[type="/"] {
+            width: calc(50% - 10px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .pr{
+            color:antiquewhite;
+            padding-bottom: 10px;
+            
+        }
+        .co{
+            color:antiquewhite;
+            padding-bottom: 10px;
+        }
+        .full{
+            padding-left: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="full">
+        <div class="head">
+            <h2>Non-Technical Certificate </h2>
+        </div>
+
+        <!-- Form for adding certificates -->
+        <form id="certificateForm">
+            <div class="full">
+           <div class="pr"><label for="prize">Prize:</label></div>
+            <input type="text" id="prize" name="prize" required><br><br>
+           <div class="co"><label for="competition">Competition Name:</label></div>
+            <input type="text" id="competition" name="competition" required><br><br>
+            <input type="file" id="certificateFile" name="certificateFile" required><br><br>
+            <div class="split"><button type="submit" class="buttons">Upload Certificate</button></div>
+        </div>
+        </form>
+
+        <!-- Table to display certificates -->
+        <table id="certificateTable">
+            <thead>
+
+                <tr>
+                    <th class="title">Prize</th>
+                    <th class="title">Competition Name</th>
+                    <th class="title">Actions</th>
+
+                </tr>
+
+            </thead>
+            <tbody id="certificateTableBody">
+                <!-- Certificates will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Modal for displaying the image -->
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="modal-content" src="" alt="Certificate Image">
+        </div>
+
+        <!-- Counter for number of certificates -->
+        <div id="certificateCount"
+            style="text-align: center; margin-top: 20px; color: #c10000; background-color: #000022;"></div>
+        <div class="back"><a href="index.html">
+                <button class="button">back</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Counter for certificates
+        var certificateCounter = 0;
+
+        // Function to handle form submission for uploading certificates
+        document.getElementById('certificateForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get form values
+            var prize = document.getElementById('prize').value;
+            var competition = document.getElementById('competition').value;
+            var file = document.getElementById('certificateFile').files[0];
+
+            // Perform upload operation
+            uploadCertificate(prize, competition, file);
+        });
+
+        // Function to dynamically create table rows for certificates
+        function createCertificateRow(prize, competition, imageUrl) {
+            var certificateId = 'certificate' + Math.random().toString(36).substr(2, 9); // Generate unique certificateId
+            var newRow = document.createElement('tr');
+            newRow.id = certificateId; // Set the id of the row to certificateId
+            newRow.innerHTML = `
+            <td>${prize}</td>
+            <td>${competition}</td>
+            <td>
+                <button onclick="viewCertificate('${imageUrl}')">View</button>
+                <button onclick="deleteCertificate('${certificateId}', '${imageUrl}')">Delete</button>
+            </td>
+        `;
+            document.getElementById('certificateTableBody').appendChild(newRow);
+            certificateCounter++; // Increment certificate counter
+            updateCertificateCount(); // Update certificate count display
+        }
+
+        // Function to handle view certificate action
+        function viewCertificate(imageUrl) {
+            // Get the modal
+            var modal = document.getElementById('imageModal');
+            // Get the image element inside the modal
+            var modalImg = document.getElementById('modalImage');
+            // Set the source of the image
+            modalImg.src = imageUrl;
+            // Display the modal
+            modal.style.display = "block";
+        }
+
+        // Function to handle delete certificate action
+        function deleteCertificate(certificateId, imageUrl) {
+            // You can implement logic to delete the certificate based on certificateId
+            // Here, let's just remove the row from the table and delete the image file
+            var row = document.getElementById(certificateId);
+            row.parentNode.removeChild(row);
+
+            // Delete the image file (you need to implement server-side logic for this)
+            // This is just a placeholder
+            alert("Image URL: " + imageUrl + " deleted successfully!");
+            certificateCounter--; // Decrement certificate counter
+            updateCertificateCount(); // Update certificate count display
+        }
+
+        // Function to simulate uploading certificate
+        function uploadCertificate(prize, competition, file) {
+            // Simulate uploading image and getting image URL
+            // This is just a placeholder, you need to implement server-side logic for actual file upload
+            var imageUrl = URL.createObjectURL(file);
+
+            // Create a row in the table with the generated certificateId and imageUrl
+            createCertificateRow(prize, competition, imageUrl);
+            alert("Certificate uploaded successfully!");
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Function to update certificate count display
+        function updateCertificateCount() {
+            document.getElementById('certificateCount').innerText = "Total Certificates: " + certificateCounter;
+        }
+
+        // Save the table data to localStorage when leaving the page
+        window.addEventListener('beforeunload', function(event) {
+            var tableData = []; // Array to store table data
+            var tableRows = document.querySelectorAll('#certificateTable tbody tr');
+
+            // Iterate through table rows and store data
+            tableRows.forEach(function(row) {
+                var rowData = {
+                    prize: row.cells[0].innerText,
+                    competition: row.cells[1].innerText
+                };
+                tableData.push(rowData);
+            });
+
+            localStorage.setItem('tableData', JSON.stringify(tableData));
+        });
+
+        // Load the saved table data from localStorage when the page is loaded
+        window.addEventListener('load', function() {
+            var savedTableData = localStorage.getItem('tableData');
+            if (savedTableData) {
+                var tableData = JSON.parse(savedTableData);
+                tableData.forEach(function(data) {
+                    createCertificateRow(data.prize, data.competition);
+                });
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

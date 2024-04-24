@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Work</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #dddddd;
+        }
+
+        .s1 {
+            color: antiquewhite;
+            padding: 10px;
+            padding-top: 50px;
+        }
+
+        .a1,
+        .p1,
+        .t1,
+        .r1,
+        .o1 {
+            color: antiquewhite;
+            padding: 10px;
+        }
+
+        .but {
+            background-color: #c10000;
+            border-radius: 5px;
+            color: antiquewhite;
+            width: 100px;
+            height: 35px;
+            padding-left: 10px;
+            margin-left: 10px;
+            margin-bottom: 20px;
+            border: none;
+            ;
+        }
+
+        .full {
+            background-color: #000022;
+        }
+
+        .n {
+            color: #c10000;
+            background-color: #191938;
+            border: none;
+        }
+
+        .h1 {
+            color: #c10000;
+            padding-left: 350px;
+            padding-top: 20px;
+        }
+
+        /* Adjusted input box sizes */
+        input[type="text"],
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .my-button {
+            background-color: #c10000;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+
+            margin-left: 10px;
+            align-self: center;
+            /* Align button in the center horizontally */
+            width: 100px;
+            /* Set width */
+            height: 35px;
+            /* Set height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .my-button a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .bb {
+            padding-bottom: 20px;
+        }
+        .bt{
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="full">
+        <h2 class="h1">Pending Work</h2>
+
+        <table id="pendingWork">
+            <tr>
+                <th class="n">Subject</th>
+                <th class="n">Assignment</th>
+                <th class="n">Practice Test </th>
+                <th class="n">Tutorial </th>
+                <th class="n">Record</th>
+                <th class="n">Observation</th>
+                <th class="n">Action</th>
+            </tr>
+        </table>
+
+        <form id="addForm">
+            <div class="s1">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" required>
+            </div>
+            <div class="a1">
+                <label for="assignment">Assignment:</label>
+                <input type="number" id="assignment" required>
+            </div>
+            <div class="p1">
+                <label for="practice">Practice Test:</label>
+                <input type="number" id="practice" required>
+            </div>
+            <div class="t1">
+                <label for="tutorial">Tutorial Marks:</label>
+                <input type="number" id="tutorial" required>
+            </div>
+            <div class="r1">
+                <label for="record">Record:</label>
+                <input type="text" id="record" required>
+            </div>
+            <div class="o1">
+                <label for="observation">Observation:</label>
+                <input type="text" id="observation" required>
+            </div>
+            <div class="bt">
+            <div class="but1">
+                <button type="submit" class="but">Add</button>
+            </div>
+        </form>
+
+        <button id="saveData" class="but">Save Data</button>
+        <div class="bb"><button class="my-button"><a href="index.html">back</a></button>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function () {
+            const savedData = JSON.parse(localStorage.getItem('pendingWorkData'));
+            const table = document.getElementById('pendingWork');
+
+            if (savedData) {
+                savedData.forEach(entry => {
+                    const newRow = table.insertRow(-1);
+                    const cells = [
+                        entry.subject,
+                        entry.assignment,
+                        entry.practice,
+                        entry.tutorial,
+                        entry.record,
+                        entry.observation,
+                        '<button onclick="deleteRow(this)" class="but">Delete</button>'
+                    ];
+                    cells.forEach(cellData => {
+                        const cell = newRow.insertCell();
+                        cell.innerHTML = cellData;
+                    });
+                });
+            }
+        });
+
+        const form = document.getElementById('addForm');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const table = document.getElementById('pendingWork');
+            const subjectInput = document.getElementById('subject');
+            const assignmentInput = document.getElementById('assignment');
+            const practiceInput = document.getElementById('practice');
+            const tutorialInput = document.getElementById('tutorial');
+            const recordInput = document.getElementById('record');
+            const observationInput = document.getElementById('observation');
+
+            const subject = subjectInput.value;
+            const assignment = assignmentInput.value;
+            const practice = practiceInput.value;
+            const tutorial = tutorialInput.value;
+            const record = recordInput.value;
+            const observation = observationInput.value;
+
+            const newRow = table.insertRow(-1);
+            const cells = [
+                subject,
+                assignment,
+                practice,
+                tutorial,
+                record,
+                observation,
+                '<button onclick="deleteRow(this)" class="but">Delete</button>'
+            ];
+            cells.forEach(cellData => {
+                const cell = newRow.insertCell();
+                cell.innerHTML = cellData;
+            });
+
+            saveDataToLocalStorage();
+
+            subjectInput.value = '';
+            assignmentInput.value = '';
+            practiceInput.value = '';
+            tutorialInput.value = '';
+            recordInput.value = '';
+            observationInput.value = '';
+        });
+
+        function deleteRow(btn) {
+            const table = document.getElementById('pendingWork');
+            const row = btn.parentNode.parentNode;
+            table.deleteRow(row.rowIndex);
+            saveDataToLocalStorage();
+        }
+
+        function saveDataToLocalStorage() {
+            const table = document.getElementById('pendingWork');
+            const data = [];
+            const rows = table.rows;
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].cells;
+                const entry = {
+                    subject: cells[0].textContent,
+                    assignment: cells[1].textContent,
+                    practice: cells[2].textContent,
+                    tutorial: cells[3].textContent,
+                    record: cells[4].textContent,
+                    observation: cells[5].textContent
+                };
+                data.push(entry);
+            }
+
+            localStorage.setItem('pendingWorkData', JSON.stringify(data));
+        }
+
+        const saveButton = document.getElementById('saveData');
+        saveButton.addEventListener('click', function () {
+            saveDataToLocalStorage();
+            alert('Data saved successfully!');
+        });
+    </script>
+
+</body>
+
+</html>

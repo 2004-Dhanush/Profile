@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 Size Image</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column; /* Align items in a column */
+      min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+      background-color: #f0f0f0;
+    }
+    .a4-container {
+      width: 21cm; /* A4 width */
+      height: 29.7cm; /* A4 height */
+      border: 1px solid #000;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1; /* Allow the image container to grow and take up remaining space */
+    }
+    .a4-image {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .my-button {
+      background-color:#c10000; /* Green */
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 10px 20px;
+      margin: 20px; /* Add some space around the button */
+      align-self: center; /* Align button in the center horizontally */
+    }
+    .my-button a {
+      color: white;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="a4-container">
+    <img class="a4-image" src="po.png" alt="A4 Size Image">
+  </div>
+  <button class="my-button"><a href="index.html">back</a></button>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #000022;
+    }
+
+    .task-list {
+      margin-top: 20px;
+    }
+
+    .task-card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: rgba(255, 255, 255, 0.8); /* Set translucent white background color */
+      transition: transform 0.3s ease;
+      color:#000022;
+    }
+
+    .task-card:hover {
+      transform: translateY(-5px);
+      background-color: #f0f0f0;
+    }
+
+    .task-card h3 {
+      margin-top: 0;
+    }
+
+    .notification {
+      background-color: antiquewhite;
+      color: #a94442;
+      padding: 5px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .s,.t {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      color: antiquewhite;
+    }
+     .e{
+      padding-bottom: 20px;
+      color: antiquewhite;
+    }
+    
+
+    .ti {
+      padding-left: 200px;
+      color: #c10000;
+    }
+
+    .bu {
+      background-color: #c10000;
+      color: antiquewhite;
+      border-radius: 5px;
+      width: 100px;
+      height: 30px; /* Adjusted height */
+      border: none;
+    }
+
+    /* Adjusted input box sizes */
+    input[type="text"],
+    input[type="date"] {
+      width: 80%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .button-container button {
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+
+    .button-container button.complete {
+      background-color: #10d616;
+      color: white;
+    }
+
+    .button-container button.delete {
+      background-color: #c10000;
+      color: white;
+    }
+    .my-button {
+      background-color:#c10000; /* Green */
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 0px;
+     
+      height: 30px; /* Adjusted height */
+      width: 100px; /* Adjusted width */
+      align-self: center; /* Align button in the center horizontally */
+    }
+    .my-button a {
+      color: white;
+      text-decoration: none;
+      
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="ti">Daily work</h1>
+    <form id="taskForm">
+      <div class="t">
+        <label for="task">Task  :</label>
+        <input type="text" id="task" name="task" required>
+      
+      <div class="s">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required>
+      </div>
+      <div class="e">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required>
+      </div>
+      <div>
+        <button type="submit" class="bu">Add Task</button>
+      </div>
+    </form>
+    <div id="taskList" class="task-list"></div>
+  </div>
+  <button class="my-button"><a href="index.html">back</a></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const taskForm = document.getElementById('taskForm');
+      const taskList = document.getElementById('taskList');
+
+      taskForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const task = taskForm.task.value;
+        const startDate = taskForm.startDate.value;
+        const endDate = taskForm.endDate.value;
+
+        // Check if end date is near
+        const today = new Date();
+        const end = new Date(endDate);
+        const diffTime = Math.abs(end - today);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const taskCard = document.createElement('div');
+        taskCard.classList.add('task-card');
+        
+        // Notify end time
+        let endTimeNotification = '';
+        if (diffDays <= 3) {
+          endTimeNotification = `<div class="notification">End date is near! ${diffDays} day(s) left.</div>`;
+        } else if (diffDays === 0) {
+          endTimeNotification = `<div class="notification" style="background-color: red;">End date is today!</div>`;
+        }
+        
+        // Set card color based on completion status
+        let cardColor = '';
+        if (diffDays < 0) {
+          cardColor = 'background-color: green;'; // Task completed
+        } else {
+          cardColor = 'background-color: rgba(255, 255, 255, 0.8);'; // Task pending with translucent white background
+        }
+
+        taskCard.innerHTML = `
+          <h3>${task}</h3>
+          <p>Start Date: ${startDate}</p>
+          <p>End Date: ${endDate}</p>
+          ${endTimeNotification}
+          <div class="button-container">
+            <button class="complete">Complete</button>
+            <button class="delete">Delete</button>
+          </div>
+        `;
+        taskCard.style.cssText = cardColor;
+
+        taskList.appendChild(taskCard);
+
+        // Reset form
+        taskForm.reset();
+      });
+
+      // Event delegation for complete and delete buttons
+      taskList.addEventListener('click', function (e) {
+        if (e.target.classList.contains('complete')) {
+          e.target.closest('.task-card').style.textDecoration = 'line-through';
+          e.target.closest('.task-card').style.backgroundColor = 'green';
+        } else if (e.target.classList.contains('delete')) {
+          e.target.closest('.task-card').remove();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

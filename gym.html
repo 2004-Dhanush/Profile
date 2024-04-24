@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Tracker</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color:#c10000;
+            background-color: #000022;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], button {
+            padding: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        .mi{
+            background-color: #191938;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exercise Tracker</h1>
+        <table id="exercise-table">
+            <tr>
+                <th class="mi">Day</th>
+                <th class="mi">Main Muscle</th>
+                <th class="mi">Muscle</th>
+                <th class="mi">Side Muscle</th>
+                <th class="mi">Cardio</th>
+                <th class="mi"></th>
+            </tr>
+        </table>
+        <form id="exercise-form">
+            <input type="text" id="days" placeholder="Day">
+            <input type="text" id="main-muscle" placeholder="Main Muscle">
+            <input type="text" id="muscle" placeholder="Muscle">
+            <input type="text" id="side-muscle" placeholder="Side Muscle">
+            <input type="text" id="cardio" placeholder="Cardio">
+            <button type="submit">Add Exercise</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const exerciseTable = document.getElementById('exercise-table');
+            const exerciseForm = document.getElementById('exercise-form');
+
+            // Load exercises from localStorage on page load
+            loadExercises();
+
+            exerciseForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // Get form values
+                const days = document.getElementById('days').value;
+                const mainMuscle = document.getElementById('main-muscle').value;
+                const muscle = document.getElementById('muscle').value;
+                const sideMuscle = document.getElementById('side-muscle').value;
+                const cardio = document.getElementById('cardio').value;
+
+                // Add exercise to table
+                addExercise(days, mainMuscle, muscle, sideMuscle, cardio);
+
+                // Clear form inputs
+                exerciseForm.reset();
+            });
+
+            function addExercise(days, mainMuscle, muscle, sideMuscle, cardio) {
+                // Create a new row
+                const newRow = document.createElement('tr');
+
+                // Add cells with exercise details
+                newRow.innerHTML = `
+                    <td>${days}</td>
+                    <td>${mainMuscle}</td>
+                    <td>${muscle}</td>
+                    <td>${sideMuscle}</td>
+                    <td>${cardio}</td>
+                    <td><button class="delete-btn">Delete</button></td>
+                `;
+
+                // Append the new row to the table
+                exerciseTable.appendChild(newRow);
+
+                // Save exercises to localStorage
+                saveExercises();
+            }
+
+            // Delete exercise
+            exerciseTable.addEventListener('click', function(event) {
+                if (event.target.classList.contains('delete-btn')) {
+                    event.target.parentElement.parentElement.remove();
+                    saveExercises();
+                }
+            });
+
+            // Save exercises to localStorage
+            function saveExercises() {
+                localStorage.setItem('exercises', exerciseTable.innerHTML);
+            }
+
+            // Load exercises from localStorage
+            function loadExercises() {
+                const exercises = localStorage.getItem('exercises');
+                if (exercises) {
+                    exerciseTable.innerHTML = exercises;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
